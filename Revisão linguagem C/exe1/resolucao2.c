@@ -5,8 +5,13 @@ int compareint(const void * a, const void * b) {
     return *(int *)a - *(int *)b;
 }
 
-void main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
     
+    if(argc != 2) {
+        printf("Uso: ./resolucao1 <n>\n");
+        return 1;
+    }
+
     int n = atoi(argv[1]);
 
     int * array = malloc(sizeof(int) * n);
@@ -22,8 +27,6 @@ void main(int argc, char *argv[]) {
     int k = 0;
     scanf("%d", &k);
 
-    int resultado = 0;
-
     // resolucao nlogn
 
     qsort(&array[0], n, sizeof(int), compareint);
@@ -37,7 +40,7 @@ void main(int argc, char *argv[]) {
         if(sum == k) {
             printf("Soma encontrada entre %d e %d.", array[left], array[right]);
             free(array);
-            return;
+            return 0;
         }
         else if(sum < k) left++;
         else right--;
@@ -46,4 +49,6 @@ void main(int argc, char *argv[]) {
     printf("Valor k nao encontrado como a soma de um par.");
 
     free(array);    
+
+    return 0;
 }
