@@ -4,12 +4,20 @@
 
 int contarPesquisaSequencial(int chave, int v[], int n);
 void printWithThousandSeparator(int number);
+int contarPesquisaSequencialComSentinela(int chave, int v[], int n);
 
+// RECOMENDO TESTAR COM 1000 PARAMETROS E 2.000.000 SIMULACOES
+// gcc main.c -o program
+// ./program 1000 20000000
 int main(int argc, char const *argv[])
 {
+    if (argc < 3) {
+        printf("Usage: %s <quantidadeDeParametros> <quantidadeDeSimulacoes>\n", argv[0]);
+        return 1;
+    }
+
     int quantidadeDeParametros = atoi(argv[1]);
 
-    // crie um vetor de inteiros com a quantidade de elementos passada por parametro com valores aleatorios
     int vetor[quantidadeDeParametros];
     int i;
     srand(time(NULL));
@@ -17,16 +25,39 @@ int main(int argc, char const *argv[])
 
     int quantidadeDeSimulacoes = atoi(argv[2]);
 
-    int contagemSequencialSoma = 0;
+    long long int contagemSequencialSoma = 0;
+    long long int contagemSequencialComSentinelaSoma = 0;
+
+    clock_t start, end;
+    double cpu_time_used;
+
+    start = clock();
     for(i = 0; i < quantidadeDeSimulacoes; i++) {
         int indiceNumeroBuscar = rand() % quantidadeDeParametros;
         int numeroBuscar = vetor[indiceNumeroBuscar];
         contagemSequencialSoma += contarPesquisaSequencial(numeroBuscar, vetor, quantidadeDeParametros);
     }
-
+    end = clock();
+    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+    printf("contarPesquisaSequencial took %f seconds to execute\n", cpu_time_used);
     printf("Contagem Sequencial Media: ");
     printWithThousandSeparator(contagemSequencialSoma / quantidadeDeSimulacoes);
     printf("\n");
+
+    start = clock();
+    for(i = 0; i < quantidadeDeSimulacoes; i++) {
+        int indiceNumeroBuscar = rand() % quantidadeDeParametros;
+        int numeroBuscar = vetor[indiceNumeroBuscar];
+        contagemSequencialComSentinelaSoma += contarPesquisaSequencialComSentinela(numeroBuscar, vetor, quantidadeDeParametros);
+    }
+    end = clock();
+    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+    printf("contarPesquisaSequencialComSentinela took %f seconds to execute\n", cpu_time_used);
+    printf("Contagem Sequencial Com Sentinela Media: ");
+    printWithThousandSeparator(contagemSequencialComSentinelaSoma / quantidadeDeSimulacoes);
+    printf("\n");
+
+    return 0;
 }
 
 int contarPesquisaSequencial(int chave, int v[], int n)
@@ -39,6 +70,22 @@ int contarPesquisaSequencial(int chave, int v[], int n)
         if (v[i] == chave) return count;
         count++;
     }
+    return count;
+}
+
+int contarPesquisaSequencialComSentinela(int chave, int v[], int n)
+{
+    // contar sequencial com sentinela
+    int count = 1;
+    int i = 0;
+    v[n] = chave;
+    while (v[i] != chave)
+    {
+        count++;
+        i++;
+    }
+    count++;
+    if (i < n) return count;
     return count;
 }
 
