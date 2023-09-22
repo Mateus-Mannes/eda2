@@ -149,6 +149,30 @@ int contarPesquisaBinaria(int chave, int v[], int n)
     return count; // Índice impossível
 }
 
+int pesquisaInterpolacao(int chave, int v[], int n)
+{
+    int ini = 0;
+    int meio = 0;
+    int fim = n - 1;
+    while (ini <= fim)
+    {
+        meio = ini + ((fim - ini) * (chave - v[ini])) / (v[fim] - v[ini]);
+        if (chave < v[meio])
+        {
+            fim = meio - 1;
+        }
+        else if (chave > v[meio])
+        {
+            ini = meio + 1;
+        }
+        else
+        {
+            return meio;
+        }
+    }
+    return -1; // Índice impossível
+}
+
 void printWithThousandSeparator(int number)
 {
     if (number < 1000)
