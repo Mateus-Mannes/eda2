@@ -104,6 +104,27 @@ void percorrer_arvore_em_largura(No* no, void (*callback)(No*)) {
     freeQueue(&fila, noopFreeFunction);
 }
 
+void adiciona_na_arvore_ordenado(Arvore* arvore, float valor) {
+    no->pai = pai;
+    no->esquerda = NULL;
+    no->direita = NULL;
+    no->valor = valor;
+
+    if (pai == NULL)
+    {
+        arvore->raiz = no;
+    }
+    else 
+    {
+        if (valor < pai->valor)
+            pai->esquerda = no;
+        else
+            pai->direita = no;
+    }
+    return no;
+
+}
+
 void limpar_arvore(Arvore* arvore) {
     if (arvore->raiz != NULL)
         remove_na_arvore(arvore, arvore->raiz);
