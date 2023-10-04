@@ -104,25 +104,36 @@ void percorrer_arvore_em_largura(No* no, void (*callback)(No*)) {
     freeQueue(&fila, noopFreeFunction);
 }
 
-void adiciona_na_arvore_ordenado(Arvore* arvore, float valor) {
-    no->pai = pai;
+No * adiciona_na_arvore_ordenado(Arvore* arvore, float valor) {
+    No *no = malloc(sizeof(No));
+    no->valor = valor;
+    no->pai = NULL;
     no->esquerda = NULL;
     no->direita = NULL;
-    no->valor = valor;
 
-    if (pai == NULL)
+    if (arvore->raiz == NULL)
     {
         arvore->raiz = no;
+        return no;
     }
-    else 
+
+    No * atual = arvore->raiz;
+    no->pai = atual;
+    while (no->pai->esquerda != no && no->pai->direita != no) 
     {
-        if (valor < pai->valor)
-            pai->esquerda = no;
-        else
-            pai->direita = no;
+        no->pai = atual;
+        if(atual->valor > valor)
+        {
+            if(atual->esquerda != NULL) atual = atual->esquerda;
+            else atual->esquerda = no;
+        }
+        else 
+        {
+            if(atual->direita != NULL) atual = atual->direita;
+            else atual->direita = no;
+        }
     }
     return no;
-
 }
 
 void limpar_arvore(Arvore* arvore) {
