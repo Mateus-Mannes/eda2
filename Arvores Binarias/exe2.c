@@ -6,8 +6,7 @@ void print_no(No* no) {
     printf("%.2f, ", no->valor);
 }
 
-int main() 
-{
+int main() {
     Arvore *arvore = cria_arvore();
     No * raiz = adiciona_na_arvore(arvore, NULL, 4);
     No * n1 = adiciona_na_arvore(arvore, raiz, 2);
@@ -19,15 +18,7 @@ int main()
     No * n7 = adiciona_na_arvore(arvore, n5, 5);
     No * n8 = adiciona_na_arvore(arvore, n5, 7);
 
-    printf("Pre-Order: ");
-    percorrer_arvore_pre_order(arvore->raiz, print_no);
-    printf("\nIn-Order: ");
-    percorrer_arvore_in_order(arvore->raiz, print_no);
-    printf("\nPos-Order: ");
-    percorrer_arvore_pos_order(arvore->raiz, print_no);
+    printf("Busca em largura: ");
+    percorrer_arvore_em_largura(arvore->raiz, print_no);
     printf("\n");
-
-    limpar_arvore(arvore);
-
-    return 0;
 }

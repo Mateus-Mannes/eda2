@@ -1,6 +1,7 @@
 #include "arvore.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include "fila.h"
 
 Arvore *cria_arvore()
 {
@@ -81,6 +82,26 @@ void percorrer_arvore_pos_order(No* no, void (*callback)(No*)) {
         percorrer_arvore_pos_order(no->direita, callback);
         callback(no);
     }
+}
+
+void noopFreeFunction(void* data) {
+    // Do nothing
+}
+
+void percorrer_arvore_em_largura(No* no, void (*callback)(No*)) {
+    Queue fila;
+    initializeQueue(&fila);
+    enqueue(&fila, no);
+    while (!queueIsEmpty(&fila))
+    {
+        No *no = dequeue(&fila);
+        callback(no);
+        if (no->esquerda != NULL)
+            enqueue(&fila, no->esquerda);
+        if (no->direita != NULL)
+            enqueue(&fila, no->direita);
+    }
+    freeQueue(&fila, noopFreeFunction);
 }
 
 void limpar_arvore(Arvore* arvore) {

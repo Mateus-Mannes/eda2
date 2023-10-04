@@ -1,13 +1,8 @@
-#include <stdio.h>
+#include <stdio.h>  
 #include <stdlib.h>
 #include "arvore.h"
 
-void print_no(No* no) {
-    printf("%.2f, ", no->valor);
-}
-
-int main() 
-{
+int main() {
     Arvore *arvore = cria_arvore();
     No * raiz = adiciona_na_arvore(arvore, NULL, 4);
     No * n1 = adiciona_na_arvore(arvore, raiz, 2);
@@ -19,15 +14,21 @@ int main()
     No * n7 = adiciona_na_arvore(arvore, n5, 5);
     No * n8 = adiciona_na_arvore(arvore, n5, 7);
 
-    printf("Pre-Order: ");
-    percorrer_arvore_pre_order(arvore->raiz, print_no);
-    printf("\nIn-Order: ");
-    percorrer_arvore_in_order(arvore->raiz, print_no);
-    printf("\nPos-Order: ");
-    percorrer_arvore_pos_order(arvore->raiz, print_no);
-    printf("\n");
+    int chave = 5;
 
-    limpar_arvore(arvore);
+    int contador = 0;
 
-    return 0;
+    No * no = arvore->raiz;
+
+    while (no != NULL)
+    {
+        contador++;
+        if(no->valor == chave) break;
+        if (chave < no->valor)
+            no = no->esquerda;
+        else
+            no = no->direita;
+    }
+
+    printf("Numero de comparacoes: %d\n", contador);
 }

@@ -23,6 +23,8 @@ void percorrer_arvore_pre_order(No* no, void (*callback)(No*));
 void percorrer_arvore_in_order(No* no, void (*callback)(No*));
 void percorrer_arvore_pos_order(No* no, void (*callback)(No*));
 
+void percorrer_arvore_em_largura(No* no, void (*callback)(No*));
+
 void limpa_arvore(Arvore* arvore);
 
 void limpar_arvore(Arvore* arvore);
