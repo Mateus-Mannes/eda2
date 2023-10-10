@@ -1,100 +1,119 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "arvore_avl.h"
+#include "fila.h"
 
-ArvoreAvl* cria_arvore_avl() {
+// metodos privados
+NoAvl * novo_no(float valor);
+int fator_balanceamento(NoAvl *no);
+int altura(NoAvl *no);
+int max(float a, float b);
+NoAvl *rse(NoAvl *no, ArvoreAvl * arvore);
+NoAvl *rsd(NoAvl *no, ArvoreAvl * arvore);
+NoAvl* rde(NoAvl* no, ArvoreAvl * arvore);
+NoAvl* rdd(NoAvl* no, ArvoreAvl * arvore);
+
+
+ArvoreAvl* cria_arvore_avl(float valorRaiz) {
     ArvoreAvl* arvore = (ArvoreAvl*) malloc(sizeof(ArvoreAvl));
     if (arvore) {
-        arvore->raiz = NULL;
+        arvore->raiz = novo_no(valorRaiz);
     }
     return arvore;
 }
 
-int arvore_vazia_avl(ArvoreAvl* arvore) {
-    return (arvore == NULL || arvore->raiz == NULL);
-}
+NoAvl *adiciona_na_arvore_avl(ArvoreAvl * arvore, NoAvl * no , float valor) {
 
-NoAvl *adiciona_na_arvore_avl(ArvoreAvl *arvore, NoAvl *pai, float valor) {
-    NoAvl *no = (NoAvl*)malloc(sizeof(NoAvl));
-    no->pai = pai;
-    no->esquerda = NULL;
-    no->direita = NULL;
-    no->valor = valor;
-
-    if (pai == NULL)
-    {
-        arvore->raiz = no;
+    if (no == NULL) 
+        return(novo_no(valor)); 
+  
+    if (valor < no->valor) {
+        no->esquerda  = adiciona_na_arvore_avl(arvore, no->esquerda, valor); 
+        no->esquerda->pai = no;
     }
-    else 
-    {
-        if (valor < pai->valor)
-            pai->esquerda = no;
-        else
-            pai->direita = no;
+    else if (valor > no->valor) {
+        no->direita = adiciona_na_arvore_avl(arvore, no->direita, valor);
+        no->direita->pai = no;
     }
-    return no;
-}
-
-void remove_na_arvore_avl(ArvoreAvl *arvore, NoAvl *no) {
-    if (no->esquerda != NULL)
-        remove_na_arvore_avl(arvore, no->esquerda);
-
-    if (no->direita != NULL)
-        remove_na_arvore_avl(arvore, no->direita);
-
-    if (no->pai == NULL)
-    {
-        arvore->raiz = NULL;
-    }
-    else
-    {
-        if (no->pai->esquerda == no)
-            no->pai->esquerda = NULL;
-        else
-            no->pai->direita = NULL;
-    }
-    free(no);
+    else return no; 
+  
+    no->altura = 1 + max(altura(no->esquerda), altura(no->direita)); 
+  
+    int fb = fator_balanceamento(no);
+  
+    if (fb > 1 && valor < no->esquerda->valor) 
+        return rsd(no, arvore); 
+  
+    if (fb < -1 && valor > no->direita->valor) 
+        return rse(no, arvore); 
+  
+    if (fb > 1 && valor > no->esquerda->valor) 
+        rdd(no, arvore);
+   
+    if (fb < -1 && valor < no->direita->valor) 
+        rde(no, arvore);
+  
+    return no; 
 }
 
 void limpar_arvore_avl(ArvoreAvl *arvore) {
-    if (arvore->raiz != NULL)
-        remove_na_arvore_avl(arvore, arvore->raiz);
-    free(arvore);
+    
 }
 
-int altura_avl(NoAvl *no)
+void remove_na_arvore_avl(ArvoreAvl *arvore, NoAvl *no) {
+    
+}
+
+void noopFreeFunction(void* data) {
+    // Do nothing
+}
+
+void percorrer_arvore_em_largura_avl(NoAvl* no, void (*callback)(NoAvl*)) {
+    Queue fila;
+    initializeQueue(&fila);
+    enqueue(&fila, no);
+    while (!queueIsEmpty(&fila))
+    {
+        NoAvl *no = dequeue(&fila);
+        callback(no);
+        if (no->esquerda != NULL)
+            enqueue(&fila, no->esquerda);
+        if (no->direita != NULL)
+            enqueue(&fila, no->direita);
+    }
+    freeQueue(&fila, noopFreeFunction);
+}
+
+
+NoAvl * novo_no(float valor) 
+{ 
+    NoAvl *no = (NoAvl*)malloc(sizeof(NoAvl));
+    no->pai = NULL;
+    no->esquerda = NULL;
+    no->direita = NULL;
+    no->valor = valor; 
+    no->altura = 1; // intancia um novo no como folha
+}
+
+int fator_balanceamento(NoAvl *no)
 {
-    int esquerda = 0, direita = 0;
-    if (no->esquerda != NULL)
-    {
-        esquerda = altura_avl(no->esquerda) + 1;
-    }
-    if (no->direita != NULL)
-    {
-        direita = altura_avl(no->direita) + 1;
-    }
-
-    return esquerda > direita ? esquerda : direita;
+    if (no == NULL) 
+        return 0; 
+    return altura(no->esquerda) - altura(no->direita); 
 }
 
-int fb_avl(NoAvl *no)
+int altura(NoAvl *no)
 {
-    int esquerda = 0;
-    int direita = 0;
-
-    if (no->esquerda != NULL)
-    {
-        esquerda = altura_avl(no->esquerda) + 1;
-    }
-    if (no->direita != NULL)
-    {
-        direita = altura_avl(no->direita) + 1;
-    }
-
-    return esquerda - direita;
+    if(no == NULL) return 0;
+    return no->altura;
 }
 
-NoAvl *rse_avl(NoAvl *no)
+int max(float a, float b) 
+{ 
+    return (a > b)? a : b; 
+} 
+
+NoAvl *rse(NoAvl *no, ArvoreAvl * arvore)
 {
     NoAvl *pai = no->pai;
     NoAvl *direita = no->direita;
@@ -104,10 +123,12 @@ NoAvl *rse_avl(NoAvl *no)
     direita->esquerda = no;
     direita->pai = pai;
 
+    if(arvore->raiz == no) arvore->raiz = direita;
+
     return direita;
 }
 
-NoAvl *rsd(NoAvl *no)
+NoAvl *rsd(NoAvl *no, ArvoreAvl * arvore)
 {
     NoAvl *pai = no->pai;
     NoAvl *esquerda = no->esquerda;
@@ -118,16 +139,18 @@ NoAvl *rsd(NoAvl *no)
     esquerda->direita = no;
     esquerda->pai = pai;
 
+    if(arvore->raiz == no) arvore->raiz = esquerda;
+
     return esquerda;
 }
 
-NoAvl* rde_avl(NoAvl* no) {
-    no->direita = rsd_avl(no->direita);
-    return rse_avl(no);
+NoAvl* rde(NoAvl* no, ArvoreAvl * arvore) {
+    no->direita = rsd(no->direita, arvore);
+    return rse(no, arvore);
 }
 
 
-NoAvl* rdd_avl(NoAvl* no) {
-    no->esquerda = rsd_avl(no->esquerda);
-    return rse_avl(no);
+NoAvl* rdd(NoAvl* no, ArvoreAvl * arvore) {
+    no->esquerda = rsd(no->esquerda, arvore);
+    return rse(no, arvore);
 }
