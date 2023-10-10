@@ -5,15 +5,15 @@ CFLAGS = -Wall -Wextra
 
 all: ./output/program
 
-TARGET = exe4
+TARGET = main
 
-./output/program: $(TARGET).o arvore.o fila.o
+./output/program: $(TARGET).o arvore_avl.o fila.o
 	$(CC) $(CFLAGS) -o $@ $^
 
-$(TARGET).o: $(TARGET).c arvore.h
+$(TARGET).o: $(TARGET).c arvore_avl.h
 	$(CC) $(CFLAGS) -c $^
 
-arvore.o: arvore.c arvore.h fila.h
+arvore.o: arvore_avl.c arvore_avl.h fila.h
 	$(CC) $(CFLAGS) -c $^
 
 fila.o: fila.c fila.h

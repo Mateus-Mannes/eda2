@@ -119,11 +119,18 @@ NoAvl *rse(NoAvl *no, ArvoreAvl * arvore)
     NoAvl *direita = no->direita;
 
     no->direita = direita->esquerda;
+    if(no->direita != NULL) no->direita->pai = no;
+
     no->pai = direita;
     direita->esquerda = no;
     direita->pai = pai;
 
     if(arvore->raiz == no) arvore->raiz = direita;
+
+    no->altura = max(altura(no->esquerda), 
+                    altura(no->direita)) + 1; 
+    direita->altura = max(altura(direita->esquerda), 
+                    altura(direita->direita)) + 1; 
 
     return direita;
 }
@@ -134,12 +141,18 @@ NoAvl *rsd(NoAvl *no, ArvoreAvl * arvore)
     NoAvl *esquerda = no->esquerda;
 
     no->esquerda = esquerda->direita;
-    no->pai = esquerda;
+    if(no->esquerda != NULL) no->esquerda->pai = no;
 
+    no->pai = esquerda;
     esquerda->direita = no;
     esquerda->pai = pai;
 
     if(arvore->raiz == no) arvore->raiz = esquerda;
+
+    no->altura = max(altura(no->esquerda), 
+                    altura(no->direita)) + 1; 
+    esquerda->altura = max(altura(esquerda->esquerda), 
+                    altura(esquerda->direita)) + 1;
 
     return esquerda;
 }
