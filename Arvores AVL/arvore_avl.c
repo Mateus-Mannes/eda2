@@ -60,9 +60,77 @@ void limpar_arvore_avl(ArvoreAvl *arvore) {
     
 }
 
-void remove_na_arvore_avl(ArvoreAvl *arvore, NoAvl *no) {
-    
-}
+NoAvl * minValueNode(NoAvl* no) 
+{ 
+    NoAvl* current = no; 
+ 
+    while (current->esquerda != NULL) 
+        current = current->esquerda; 
+ 
+    return current; 
+} 
+
+NoAvl* remove_na_arvore_avl(ArvoreAvl * arvore , NoAvl* raiz, int valor) 
+{ 
+    if (raiz == NULL) 
+        return raiz; 
+ 
+    if ( valor < raiz->valor ) 
+        raiz->esquerda = remove_na_arvore_avl(arvore, raiz->esquerda, valor); 
+    else if( valor > raiz->valor ) 
+        raiz->direita = remove_na_arvore_avl(arvore, raiz->direita, valor); 
+    else
+    { 
+        if( (raiz->esquerda == NULL) ||
+            (raiz->direita == NULL) ) 
+        { 
+            Node *noDeletar = raiz->esquerda ? 
+                         raiz->esquerda : 
+                         raiz->direita; 
+ 
+            if (noDeletar == NULL) 
+            { 
+                noDeletar = raiz; 
+                raiz = NULL; 
+            } 
+            else 
+            {
+                NoAvl * temp = raiz;
+                raiz = noDeletar;
+                noDeletar = temp;
+            } 
+            free(noDeletar); 
+        } 
+        else
+        { 
+            NoAvl* temp = minValueNode(raiz->direita); 
+ 
+            raiz->valor = temp->valor; 
+ 
+            raiz->direita = remove_na_arvore_avl(arvore, raiz->direita, temp->valor); 
+        } 
+    } 
+  
+    if (raiz == NULL) return raiz; 
+  
+    raiz->altura = 1 + max(altura(raiz->esquerda), altura(raiz->direita)); 
+ 
+    int fb = fator_balanceamento(raiz); 
+ 
+    if (fb > 1 && fator_balanceamento(raiz->esquerda) >= 0) 
+        return rsd(raiz, arvore); 
+ 
+    if (fb > 1 && fator_balanceamento(raiz->esquerda) < 0) 
+        return rdd(raiz, arvore); 
+ 
+    if (fb < -1 && fator_balanceamento(raiz->direita) <= 0) 
+        return rse(raiz, arvore); 
+ 
+    if (fb < -1 && fator_balanceamento(raiz->direita) > 0) 
+        return rde(raiz, arvore);
+ 
+    return raiz; 
+} 
 
 void noopFreeFunction(void* data) {
     // Do nothing
@@ -166,4 +234,34 @@ NoAvl* rde(NoAvl* no, ArvoreAvl * arvore) {
 NoAvl* rdd(NoAvl* no, ArvoreAvl * arvore) {
     no->esquerda = rsd(no->esquerda, arvore);
     return rse(no, arvore);
+}
+
+void print_arvore_avl_recursivo(NoAvl* root, int space)
+{
+    // Base case
+    if (root == NULL)
+        return;
+ 
+    // Increase distance between levels
+    space += 10;
+ 
+    // Process right child first
+    print_arvore_avl_recursivo(root->direita, space);
+ 
+    // Print current node after space
+    // count
+    printf("\n");
+    for (int i = 10; i < space; i++)
+        printf(" ");
+    printf("%.0f\n", root->valor);
+ 
+    // Process left child
+    print_arvore_avl_recursivo(root->esquerda, space);
+}
+ 
+// Wrapper over print2DUtil()
+void print_arvore_avl(NoAvl* root)
+{
+    // Pass initial space count as 0
+    print_arvore_avl_recursivo(root, 0);
 }

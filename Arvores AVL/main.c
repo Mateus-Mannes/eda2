@@ -28,7 +28,10 @@ int main() {
     adiciona_na_arvore_avl(arvore,arvore->raiz, 6);
     adiciona_na_arvore_avl(arvore,arvore->raiz, 5);
     adiciona_na_arvore_avl(arvore,arvore->raiz, 7);
-    
-    percorrer_arvore_em_largura_avl(arvore->raiz, print_no);
-    printf("\n");
+
+    print_arvore_avl(arvore->raiz);
+
+    remove_na_arvore_avl(arvore, arvore->raiz, 6);
+
+    print_arvore_avl(arvore->raiz);
 }

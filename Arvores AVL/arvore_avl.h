@@ -18,6 +18,8 @@ NoAvl *adiciona_na_arvore_avl(ArvoreAvl * arvore, NoAvl * no, float valor);
 
 void limpar_arvore_avl(ArvoreAvl *arvore);
 
-void remove_na_arvore_avl(ArvoreAvl *arvore, NoAvl *no);
+NoAvl* remove_na_arvore_avl(ArvoreAvl * arvore , NoAvl* raiz, int valor);
 
 void percorrer_arvore_em_largura_avl(NoAvl* no, void (*callback)(NoAvl*));
+
+void print_arvore_avl(NoAvl* root);
