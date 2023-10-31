@@ -17,4 +17,10 @@ typedef struct arvore
     struct no *nulo;
 } Arvore;
 
+void limparArvore(Arvore *arvore);
+
+Arvore *criarArvore();
+void print_arvore(No* root);
 No *criarNo(Arvore *arvore, No *pai, int valor);
+void inserir(Arvore *arvore, int valor);
+void removerValor(Arvore *arvore, int valorDesejado);

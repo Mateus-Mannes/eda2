@@ -57,7 +57,7 @@ NoAvl *adiciona_na_arvore_avl(ArvoreAvl * arvore, NoAvl * no , float valor) {
 }
 
 void limpar_arvore_avl(ArvoreAvl *arvore) {
-    
+    // TODO
 }
 
 NoAvl * minValueNode(NoAvl* no) 
