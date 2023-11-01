@@ -8,8 +8,7 @@
                 "-fdiagnostics-color=always",
                 "-g",
                 "${file}",
-                "/workspaces/eda2/Arvores AVL/fila.c",
-                "/workspaces/eda2/Arvores AVL/arvore_avl.c",
+                "/workspaces/eda2/Arvores B/arvoreB.c",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}"
             ],

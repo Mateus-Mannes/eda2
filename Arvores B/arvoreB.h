@@ -14,3 +14,5 @@ typedef struct arvoreB
 
 ArvoreB* criaArvore(int ordem);
 
+void adicionaChave(ArvoreB *arvore, int chave);
+
